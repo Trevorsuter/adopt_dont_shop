@@ -1,0 +1,11 @@
+<h2><%= @application.name %></h2>
+<b>Address:</b> <%= @application.street_address %>, <%= @application.city %>, <%= @application.state %> <%= @application.zip %> <br>
+<b>Description:</b> <%= @application.description %> <br>
+<b>Pets on Application:</b><% @application.pets.each do |pet| %>
+  <%= form_with url: '/admin/applications', method: :post, local: :true do |f| %>
+    <% f.label "#{pet.name}" %><a href="/pets/#{pet.id}"><%= pet.name %></a>
+    <%= f.submit "Approve #{pet.name}", id: :approve %>
+    <%= f.submit "Reject #{pet.name}", id: :reject %>
+  <% end %>
+<% end %> <br>
+<b>Status:</b> <%= @application.status %> <br><br>

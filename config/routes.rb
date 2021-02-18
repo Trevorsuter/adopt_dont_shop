@@ -29,5 +29,5 @@ Rails.application.routes.draw do
   patch "/applications/:id", to: "applications#submit_app"
 
   get "/admin/applications/:id", to: "admin_applications#show"
-  post "/admin/applications", to: "admin_applications#approve_or_reject"
+  patch "/admin/applications/:id", to: "admin_applications#show"
 end

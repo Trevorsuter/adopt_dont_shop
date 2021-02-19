@@ -24,6 +24,7 @@ RSpec.describe "Admin Applications Show Page", type: :feature do
       description: "I Love Dogs",
       status: "Pending"
     )
+
     ApplicationPet.create!(application: @trevor, pet: @rico)
   end
 
@@ -79,6 +80,13 @@ RSpec.describe "Admin Applications Show Page", type: :feature do
       description: "I Love All Dogs",
       status: "Pending"
     )
+    saki = @ddfl.pets.create!(
+        name: "Saki",
+        approximate_age: 5,
+        description: "mutt",
+        sex: "female"
+      )
+    ApplicationPet.create!(application: @trevor, pet: saki)
     ApplicationPet.create!(application: maddie, pet: @rico)
 
     # Visit's Trevor's admin application page

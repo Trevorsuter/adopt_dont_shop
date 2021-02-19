@@ -24,6 +24,23 @@ RSpec.describe "Admin Shelters index page", type: :feature do
         state: "CO",
         zip: 80220
       )
+      @rico = @ddfl.pets.create!(
+        name: "Rico",
+        approximate_age: 4,
+        description: "Staffordshire Terrier",
+        sex: "male"
+      )
+      @trevor = Application.create!(
+        name: "Trevor Suter",
+        street_address: "1275 Birch Lane",
+        city: "Denver",
+        state: "CO",
+        zip: 80220,
+        description: "I Love Dogs",
+        status: "Pending"
+      )
+
+    ApplicationPet.create!(application: @trevor, pet: @rico)
     end
     it 'should list all the shelters' do
       visit "/admin/shelters"
@@ -31,6 +48,14 @@ RSpec.describe "Admin Shelters index page", type: :feature do
       expect(page).to have_content(@ddfl.name)
       expect(page).to have_content(@maxfund.name)
       expect(page).to have_content(@das.name)
+    end
+
+    it 'should have a section listing all shelters with pending applications' do
+      visit "/admin/shelters"
+
+      within('.pending') do
+        expect(page).to have_content(@ddfl.name)
+      end
     end
   end
 end

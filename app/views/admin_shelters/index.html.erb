@@ -1,3 +1,9 @@
 <% @shelters.each do |shelter| %>
 <a href="/admin/shelters/<%= shelter.id %>"><%= shelter.name %></a> <br>
 <% end %>
+<section class='pending'>
+  <b>Pending Apps: </b> <br>
+  <% @pending.each do |pending| %>
+    <%= pending.name %>
+  <% end %>
+</section>

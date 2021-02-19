@@ -37,4 +37,10 @@ class Application < ApplicationRecord
       self.update_attribute(:status, "Pending")
     end
   end
+
+  def self.pending_pets
+    where(status: 'Pending').flat_map do |app|
+      app.pets
+    end.uniq
+  end
 end

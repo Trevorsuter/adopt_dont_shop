@@ -92,4 +92,85 @@ RSpec.describe "Admin Applications Show Page", type: :feature do
     expect(page).to have_button("Approve #{@rico.name}")
     expect(page).to have_button("Reject #{@rico.name}")
   end
+
+  it "will approve the application after all pets are approved" do
+    visit "/admin/applications/#{@trevor.id}"
+    click_on("Approve #{@rico.name}")
+    expect(page).to_not have_content("Pending")
+    expect(page).to have_content("Approved")
+  end
+
+  it "will reject the application if one pet is rejected" do
+    saki = @ddfl.pets.create!(
+      name: "Saki",
+      approximate_age: 7,
+      description: "dog",
+      sex: "female"
+    )
+    ApplicationPet.create!(application: @trevor, pet: saki)
+
+    visit "/admin/applications/#{@trevor.id}"
+    click_on("Approve #{@rico.name}")
+    click_on("Reject #{saki.name}")
+    expect(page).to_not have_content("Pending")
+    expect(page).to have_content("Rejected")
+  end
+
+  it "will not affect other app statuses" do
+    maddie = Application.create!(
+      name: "Maddie Suter",
+      street_address: "1200 Larimer St",
+      city: "Denver",
+      state: "CO",
+      zip: 80220,
+      description: "I Love All Dogs",
+      status: "Pending"
+    )
+    ApplicationPet.create!(application: maddie, pet: @rico)
+
+    visit "/admin/applications/#{@trevor.id}"
+    click_on("Approve #{@rico.name}")
+    expect(page).to_not have_content("Pending")
+    expect(page).to have_content("Approved")
+
+    visit "/admin/applications/#{maddie.id}"
+    expect(page).to have_content("Pending")
+  end
+
+
+  describe "methods" do
+    it 'can find the app status by the app id' do
+      ddfl = Shelter.create!(
+        name: "Denver Dumb Friends League",
+        address: "123 Doggie Lane",
+        city: "Denver",
+        state: "CO",
+        zip: 80246
+      )
+      rico = ddfl.pets.create!(
+        name: "Rico",
+        approximate_age: 4,
+        description: "Staffordshire Terrier",
+        sex: "male"
+      )
+      saki = ddfl.pets.create!(
+        name: "Saki",
+        approximate_age: 5,
+        description: "mutt",
+        sex: "female"
+      )
+      trevor = Application.create!(
+        name: "Trevor Suter",
+        street_address: "1275 Birch Lane",
+        city: "Denver",
+        state: "CO",
+        zip: 80220
+      )
+      ApplicationPet.create!(application: trevor, pet: rico, pet_status: "approved")
+      ApplicationPet.create!(application: trevor, pet: saki)    
+
+      expect(rico.app_status(trevor.id)).to eq("approved")
+      expect(saki.app_status(trevor.id)).to be_nil
+    end
+  end
 end

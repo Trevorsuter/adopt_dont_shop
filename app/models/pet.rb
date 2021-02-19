@@ -9,4 +9,8 @@ class Pet < ApplicationRecord
             }
 
   enum sex: [:female, :male]
+
+  def app_status(app_id)
+    ApplicationPet.where(application: app_id, pet: self.id).first.pet_status
+  end
 end

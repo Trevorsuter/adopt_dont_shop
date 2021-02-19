@@ -3,7 +3,7 @@
 <b>Description:</b> <%= @application.description %> <br>
 <b>Pets on Application:</b><% @application.pets.each do |pet| %>
   <%= form_with url: "/admin/applications/#{@application.id}", method: :patch, local: :true do |f| %>
-    <% f.label "#{pet.name}" %><a href="/pets/#{pet.id}"><%= pet.name %></a>
+    <% f.label "#{pet.name}" %><a href="/pets/<%= pet.id %>"><%= pet.name %></a>
     <%= f.hidden_field :pet_id, value: "#{pet.id}" %><%= "#{pet.app_status(@application.id)}" %>
     <% if pet.app_status(@application.id) == nil %>
       <%= f.button "Approve #{pet.name}", value: :approved%>

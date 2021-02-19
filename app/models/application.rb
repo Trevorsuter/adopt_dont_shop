@@ -29,6 +29,10 @@ class Application < ApplicationRecord
       self.update_attribute(:status, "Rejected")
     elsif !pet_statuses.include?(nil) && !pet_statuses.include?("rejected")
       self.update_attribute(:status, "Approved")
+      self.pets.each do |pet|
+        pet.update_attribute(:adoptable, false)
+        pet.save
+      end
     else
       self.update_attribute(:status, "Pending")
     end
